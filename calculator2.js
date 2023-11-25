@@ -17,7 +17,6 @@ function blank() {
   operator = [];
   last = '';
   answer = 0;
-  console.log('yo');
 
   document.getElementById("answer").classList.add('answer');
   document.querySelector('.answer').innerHTML = `${answer}`;
@@ -27,7 +26,7 @@ function blank() {
 function number(value) {
 
   //redoing 1st operator and 1st 2nd number
-  if ((answer.length != 0) && (value === "=")) {
+  if ((answer.length != 0) && (value === "=") && (secondInt.length === 0)) {
     firstNumber = localStorage.getItem('answer');
     firstInt = Number(firstNumber);
     last = localStorage.getItem('last');
@@ -42,23 +41,33 @@ function number(value) {
     firstInt = Number(firstNumber);
     console.log(firstInt);
     operator.push(value);
-    last = operator[operator.length-1];
+    console.log(operator);
+    newLast = operator[operator.length-1];
     console.log(firstInt);
-    console.log(last);
+    console.log(newLast);
+    secondNumber = [];
+    secondInt = '';
   }
 
   //getting 2nd 2nd number after operator and answer
   if ((answer.length != 0) && (firstInt.length != 0) && (last.length != 0) && (value === 0 || value === 1 || value === 2 || value === 3 || value === 4 || value === 5 || value === 6 || value === 7 || value === 8 || value === 9)) {
     console.log('second number after operator');
-    secondNumber = [];
-    secondInt = '';
     console.log(secondNumber);
     secondNumber.push(value);
     console.log(secondNumber);
     secondInt = Number(secondNumber.join(''));
     console.log(firstInt);
+    last = newLast;
     console.log(last);
     console.log(secondInt);
+  }
+
+  if ((value === "=") && (answer.length != 0) && (firstInt.length != 0) && (secondInt.length != 0)) {
+    console.log(firstInt);
+    console.log(secondInt);
+    console.log(newLast);
+    console.log(last);
+    console.log('second equals');
     equals();
   }
 
@@ -69,11 +78,10 @@ function number(value) {
     console.log(firstInt);
     console.log(last);
     console.log(secondInt);
-    equals();
   }
 
   //getting 1st 1st operator
-  if ((firstInt.length != 0) && (secondInt.length === 0) && (value === "/" || value === "*" || value === "-" || value === "+")) {
+  if ((firstInt.length != 0) && (secondInt.length === 0) && (value === "/" || value === "*" || value === "+" || value === "-")) {
     operator.push(value);
     last = operator[operator.length-1];
     console.log(firstInt);
@@ -88,7 +96,11 @@ function number(value) {
   }
 
   //equals
-  if ((value === "=") && (firstInt.length != 0) && (secondInt.length != 0)) {
+  if ((value === "=") && (firstInt.length != 0) && (secondInt.length != 0) && (answer.length === 0)) {
+    console.log(firstInt);
+    console.log(secondInt);
+    console.log(last);
+    console.log('first equals');
     equals();
   }
 }
@@ -103,19 +115,24 @@ function equals() {
     }
   } else if (last === "*") {
     answer = firstInt*secondInt;
-    if ( answer > 999999999) {
+    if (answer > 999999999) {
       answer = answer.toExponential(4);
     } else if (answer < 999999999) {
     }
   } else if (last === "-") {
     answer = firstInt-secondInt;
+    if (answer > 999999999) {
+      answer = answer.toExponential(4);
+    } 
   } else if (last === "+") {
-    answer = firstInt+secondInt;;
+    answer = firstInt+secondInt;
+    if (answer > 999999999) {
+      answer = answer.toExponential(4);
+    }
   }
 
   document.getElementById("answer").classList.add('answer');
   document.querySelector('.answer').innerHTML = `${answer}`;
-
 
   localStorage.setItem('firstInt', firstInt);
   localStorage.setItem('secondInt', secondInt);
